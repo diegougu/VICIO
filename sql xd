@@ -80,4 +80,3 @@ SELECT * FROM categorias;
 
 SELECT * FROM contenidos;
 
-ALTER TABLE contenidos ADD COLUMN id_categoria INT REFERENCES categorias(id);
