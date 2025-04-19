@@ -1,0 +1,83 @@
+-- 1. Tabla de usuarios
+CREATE TABLE usuarios (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) UNIQUE NOT NULL,
+    contraseña VARCHAR(100) NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Tabla de contenidos
+CREATE TABLE contenidos (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    titulo VARCHAR(150) NOT NULL,
+    descripcion TEXT,
+    tipo VARCHAR(50), -- imagen, sonido, video
+    url TEXT NOT NULL,
+    precio NUMERIC(10, 2) NOT NULL,
+    fecha_subida TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    id_usuario INT REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- 3. Tabla de descargas
+CREATE TABLE descargas (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_usuario INT REFERENCES usuarios(id) ON DELETE CASCADE,
+    id_contenido INT REFERENCES contenidos(id) ON DELETE CASCADE,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 4. Tabla historial de descargas
+CREATE TABLE historial_descargas (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_usuario INT REFERENCES usuarios(id),
+    id_contenido INT REFERENCES contenidos(id),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 5. Tabla de promociones
+CREATE TABLE promociones (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    codigo VARCHAR(50) UNIQUE NOT NULL,
+    descripcion TEXT,
+    descuento NUMERIC(5, 2), -- Ej: 10.00 = 10%
+    fecha_inicio DATE,
+    fecha_fin DATE,
+    activo BOOLEAN DEFAULT TRUE
+);
+
+-- 6. Tabla de regalos entre usuarios
+CREATE TABLE regalos (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_remitente INT REFERENCES usuarios(id),
+    id_destinatario INT REFERENCES usuarios(id),
+    id_contenido INT REFERENCES contenidos(id),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 7. Tabla de administradores
+CREATE TABLE administradores (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) UNIQUE NOT NULL,
+    contraseña VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE categorias (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+
+SELECT * FROM usuarios;
+
+SELECT * FROM usuarios;
+
+
+SELECT * FROM administradores;
+
+SELECT * FROM categorias;
+
+SELECT * FROM contenidos;
+
+ALTER TABLE contenidos ADD COLUMN id_categoria INT REFERENCES categorias(id);
